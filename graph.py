@@ -34,7 +34,7 @@ if api_key:
     os.environ["GOOGLE_API_KEY"] = api_key
 
 
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0)
+llm = ChatGoogleGenerativeAI(model="gemini-flash-lite-latest", temperature=0)
 
 def intent_node(state: GraphState):
     """
