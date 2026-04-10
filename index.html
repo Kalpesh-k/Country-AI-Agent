@@ -3,111 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Country AI — Intelligence Agent</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Country Intelligence Bot</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         :root {
+            /* Purple & Dark Black Theme */
             --bg-color: #000000;
-            --container-bg: #0a0a0b;
-            --accent-primary: #8e75ff;
-            --text-main: #f0f0f0;
-            --text-dim: #8e8e93;
-            --border-color: rgba(255, 255, 255, 0.05);
+            --chat-bg: #050505;
+            --surface: #0a0a0a;
+            --accent: #a855f7; /* Vibrant Purple */
+            --accent-glow: rgba(168, 85, 247, 0.25);
+            --text-primary: #ffffff;
+            --text-secondary: #8e8e93;
+            --border: rgba(168, 85, 247, 0.15);
+            
+            --radius-bubble: 20px;
+            --radius-container: 24px;
         }
+
+        * { box-sizing: border-box; }
 
         body {
             font-family: 'Outfit', sans-serif;
             background-color: var(--bg-color);
-            color: var(--text-main);
-            height: 100vh;
+            color: var(--text-primary);
             margin: 0;
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Nav Header */
+        header {
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
             justify-content: center;
-            overflow: hidden;
-        }
-
-        .main-wrapper {
-            width: 100%;
-            max-width: 900px;
-            height: 90vh;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-        }
-
-        .chat-container {
-            flex: 1;
-            background: var(--container-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 28px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.8);
-            overflow: hidden;
-            position: relative;
-        }
-
-        .chat-header {
-            padding: 24px 32px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
             align-items: center;
-            justify-content: space-between;
-            background: rgba(10, 10, 11, 0.95);
-            backdrop-filter: blur(20px);
+            background: var(--bg-color);
             z-index: 10;
         }
 
-        .chat-header h1 {
-            font-size: 1.15rem;
+        .header-title {
+            font-size: 1rem;
             font-weight: 600;
-            margin: 0;
-            letter-spacing: -0.02em;
-        }
-
-        .status {
-            font-size: 0.7rem;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.5px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .status-dot {
-            width: 6px;
-            height: 6px;
-            background: #34a853;
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
             border-radius: 50%;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
         }
 
-        .chat-body {
+        /* Chat Layout */
+        main {
             flex: 1;
-            padding: 32px;
-            overflow-y: auto;
-            scroll-behavior: smooth;
-        }
-
-        .chat-body::-webkit-scrollbar {
-            width: 4px;
-        }
-        .chat-body::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-        }
-
-        .message-wrapper {
-            margin-bottom: 28px;
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
             display: flex;
             flex-direction: column;
-            animation: slideUp 0.4s ease-out;
+            min-height: 0; /* Crucial for flex scrolling */
+        }
+
+        #chatFeed {
+            flex: 1;
+            padding: 40px 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        #chatFeed::-webkit-scrollbar { width: 4px; }
+        #chatFeed::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+        /* Message Bubbles */
+        .msg-wrapper {
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.3s ease-out forwards;
         }
 
         @keyframes slideUp {
@@ -115,228 +103,309 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .bot-container {
+        .msg-bot-container {
             display: flex;
-            gap: 16px;
+            gap: 15px;
             align-items: flex-start;
+            max-width: 85%;
         }
 
-        .gemini-icon {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, #4285f4, #9b72cb, #d96570);
+        .bot-avatar {
+            width: 34px;
+            height: 34px;
+            background: var(--accent);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
             flex-shrink: 0;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 12px var(--accent-glow);
         }
 
-        .message-bot {
-            color: var(--text-main);
-            font-size: 0.95rem;
+        .msg-bot {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 16px 20px;
+            border-radius: 4px 20px 20px 20px;
             line-height: 1.6;
-            padding-top: 4px;
+            font-size: 0.95rem;
         }
 
-        .message-user {
+        .msg-user {
             align-self: flex-end;
-            background: #1c1c1e;
-            color: #fff;
+            background: var(--accent);
+            color: white;
             padding: 12px 20px;
-            border-radius: 20px;
-            border-bottom-right-radius: 4px;
-            font-size: 0.92rem;
-            max-width: 80%;
+            border-radius: 20px 20px 4px 20px;
+            max-width: 75%;
+            font-size: 0.95rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         }
 
-        .chat-footer {
-            padding: 24px 32px;
-            background: var(--container-bg);
+        /* Data Card Rendering */
+        .intel-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            margin: 15px 0 5px;
+            overflow: hidden;
         }
 
-        .input-wrapper {
-            background: #141416;
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 10px 14px 10px 24px;
+        .intel-head {
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             display: flex;
             align-items: center;
+            gap: 8px;
+        }
+
+        .intel-body {
+            display: grid;
+            grid-template-columns: 1fr;
+            padding: 5px 0;
+        }
+
+        .intel-row {
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* Align to top for multi-line values */
+            gap: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .intel-row:last-child { border-bottom: none; }
+
+        .label { 
+            color: var(--text-secondary); 
+            font-size: 0.8rem; 
+            font-weight: 500; 
+            white-space: nowrap; /* Keep label on one line */
+            flex-shrink: 0;
+        }
+        .val { 
+            color: var(--text-primary); 
+            font-weight: 500; 
+            font-size: 0.85rem; 
+            text-align: right;
+            word-break: break-word; /* Wrap long lists */
+        }
+
+        /* Loader */
+        .loader-row {
+            display: none;
+            padding: 0 60px;
+            margin-bottom: 20px;
+        }
+
+        .loader-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .pulse-icon {
+            color: var(--accent);
+            animation: pulse-spin 2s infinite linear;
+        }
+
+        @keyframes pulse-spin {
+            0% { transform: scale(1) rotate(0); opacity: 0.6; }
+            50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+            100% { transform: scale(1) rotate(360deg); opacity: 0.6; }
+        }
+
+        /* Footer Input */
+        footer {
+            padding: 20px 20px 40px;
+            background: var(--bg-color);
+        }
+
+        .input-box {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 8px 12px 8px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s;
+        }
+
+        .input-box:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
         }
 
         .chat-input {
             flex: 1;
             background: transparent;
             border: none;
-            color: var(--text-main);
+            color: white;
+            font-family: inherit;
             font-size: 0.95rem;
             outline: none;
+            padding: 10px 0;
         }
 
-        .chat-input::placeholder {
-            color: #555;
-        }
+        .chat-input::placeholder { color: #555; }
 
         .send-btn {
-            background: white;
-            color: black;
+            background: var(--accent);
+            color: white;
             border: none;
-            width: 38px;
-            height: 38px;
-            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
             cursor: pointer;
+            transition: transform 0.2s;
         }
 
-        .send-btn:hover {
-            transform: scale(1.05);
-        }
+        .send-btn:hover { transform: scale(1.05); }
 
-        .send-btn:disabled {
-            background: #1c1c1e;
-            color: #444;
-        }
-
-        /* Analyzing / Loading State */
-        .typing-indicator {
-            display: none;
-            margin-top: 10px;
-            padding-left: 48px;
-        }
-
-        .loading-content {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--text-dim);
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .loading-star {
-            font-size: 1.1rem;
-            color: var(--accent-primary);
-            animation: spinAndPulse 2s linear infinite;
-        }
-
-        @keyframes spinAndPulse {
-            0% { transform: rotate(0deg) scale(1); opacity: 0.7; }
-            50% { transform: rotate(180deg) scale(1.2); opacity: 1; }
-            100% { transform: rotate(360deg) scale(1); opacity: 0.7; }
-        }
-
-        #chatEntries b, #chatEntries strong {
-            color: var(--accent-primary);
-            font-weight: 600;
-        }
+        /* General Bold Fix */
+        b { color: var(--accent); }
     </style>
 </head>
 <body>
 
-    <div class="main-wrapper">
-        <div class="chat-container">
-            <header class="chat-header">
-                <h1>Country Intelligence Tool</h1>
-                <div class="status">
-                    <div class="status-dot"></div>
-                    Active
-                </div>
-            </header>
+    <header>
+        <div class="header-title">
+            <div class="status-dot"></div>
+            Country Intelligence Bot
+        </div>
+    </header>
 
-            <main class="chat-body" id="chatEntries">
-                <div class="message-wrapper">
-                    <div class="bot-container">
-                        <div class="gemini-icon">
-                            <i class="bi bi-stars"></i>
-                        </div>
-                        <div class="message-bot">
-                            Hello! I am your AI Country Agent. How can I help you today?
-                        </div>
+    <main>
+        <div id="chatFeed">
+            <div class="msg-wrapper">
+                <div class="msg-bot-container">
+                    <div class="bot-avatar"><i class="bi bi-robot"></i></div>
+                    <div class="msg-bot">
+                        Hello! I am your Country Intelligence Assistant. <br>
+                        Ask me about any country, and I will find the official data for you.
                     </div>
-                </div>
-            </main>
-
-            <div class="typing-indicator" id="loadingIndicator">
-                <div class="loading-content">
-                    <i class="bi bi-stars loading-star"></i>
-                    <span>Analyzing information...</span>
                 </div>
             </div>
-
-            <footer class="chat-footer">
-                <form id="agentForm">
-                    <div class="input-wrapper">
-                        <input type="text" id="userInput" class="chat-input" placeholder="Ask about any country..." autocomplete="off" required>
-                        <button type="submit" class="send-btn" id="submitBtn">
-                            <i class="bi bi-arrow-up"></i>
-                        </button>
-                    </div>
-                </form>
-            </footer>
         </div>
-    </div>
+
+        <div class="loader-row" id="loader">
+            <div class="loader-pill">
+                <i class="bi bi-stars pulse-icon"></i>
+                <span>Retrieving factual data...</span>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <form id="chatForm">
+            <div class="input-box">
+                <input type="text" id="userInput" class="chat-input" placeholder="What would you like to know?" autocomplete="off" required>
+                <button type="submit" class="send-btn" id="sendBtn">
+                    <i class="bi bi-arrow-up-short" style="font-size: 1.5rem"></i>
+                </button>
+            </div>
+        </form>
+    </footer>
 
     <script>
-        const form = document.getElementById('agentForm');
+        const feed = document.getElementById('chatFeed');
+        const form = document.getElementById('chatForm');
         const input = document.getElementById('userInput');
-        const entries = document.getElementById('chatEntries');
-        const loader = document.getElementById('loadingIndicator');
-        const btn = document.getElementById('submitBtn');
+        const loader = document.getElementById('loader');
+        const btn = document.getElementById('sendBtn');
 
-        function createMessage(content, type) {
+        function appendMessage(text, role) {
             const wrapper = document.createElement('div');
-            wrapper.className = 'message-wrapper';
+            wrapper.className = 'msg-wrapper';
 
-            if (type === 'user') {
-                wrapper.innerHTML = `<div class="message-user">${content}</div>`;
+            if (role === 'user') {
+                wrapper.innerHTML = `<div class="msg-user">${text}</div>`;
             } else {
-                // Support basic markdown-style bolding for a cleaner look
-                const formattedContent = content.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+                let html = text;
+                
+                // --- Simple Logic for Structured Info ---
+                const headerMatch = html.match(/### (.*?)\n/);
+                let header = "";
+                if (headerMatch) {
+                    header = `<div class="intel-head"><i class="bi bi-shield-check"></i> ${headerMatch[1]}</div>`;
+                    html = html.replace(/### (.*?)\n/, "");
+                }
+
+                const points = html.match(/- \*\*(.*?)\*\*: (.*?)\n/g);
+                let body = "";
+                if (points) {
+                    body = '<div class="intel-body">';
+                    points.forEach(p => {
+                        const m = p.match(/- \*\*(.*?)\*\*: (.*)/);
+                        if (m) {
+                            body += `<div class="intel-row"><span class="label">${m[1]}</span><span class="val">${m[2]}</span></div>`;
+                        }
+                    });
+                    body += '</div>';
+                    html = html.replace(/- \*\*(.*?)\*\*: (.*?)\n/g, "");
+                }
+
+                html = html.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+
+                let finalContent = html;
+                if (header || body) {
+                    finalContent = `${html}<div class="intel-card">${header}${body}</div>`;
+                }
+
                 wrapper.innerHTML = `
-                    <div class="bot-container">
-                        <div class="gemini-icon"><i class="bi bi-stars"></i></div>
-                        <div class="message-bot">${formattedContent}</div>
+                    <div class="msg-bot-container">
+                        <div class="bot-avatar"><i class="bi bi-robot"></i></div>
+                        <div class="msg-bot">${finalContent}</div>
                     </div>
                 `;
             }
 
-            entries.appendChild(wrapper);
-            entries.scrollTop = entries.scrollHeight;
+            feed.appendChild(wrapper);
+            feed.scrollTop = feed.scrollHeight;
         }
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const text = input.value.trim();
-            if (!text) return;
+            const val = input.value.trim();
+            if (!val) return;
 
-            createMessage(text, 'user');
+            appendMessage(val, 'user');
             input.value = '';
             
             loader.style.display = 'block';
-            entries.scrollTop = entries.scrollHeight;
+            feed.scrollTop = feed.scrollHeight;
             btn.disabled = true;
 
             try {
-                const response = await fetch(`/ask?query=${encodeURIComponent(text)}`);
-                const data = await response.json();
+                const res = await fetch(`/ask?query=${encodeURIComponent(val)}`);
+                const data = await res.json();
                 
                 loader.style.display = 'none';
                 btn.disabled = false;
                 
                 if (data.response) {
-                    createMessage(data.response, 'bot');
+                    const norm = data.response.endsWith('\n') ? data.response : data.response + '\n';
+                    appendMessage(norm, 'bot');
                 } else {
-                    createMessage("I encountered an issue. Please try again.", 'bot');
+                    appendMessage("I couldn't complete that search right now.", 'bot');
                 }
             } catch (err) {
                 loader.style.display = 'none';
                 btn.disabled = false;
-                createMessage("Service currently unavailable.", 'bot');
+                appendMessage("The service is temporarily unavailable.", 'bot');
             }
         });
     </script>

@@ -1,7 +1,6 @@
 import logging
 import sys
 
-
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -10,7 +9,7 @@ logging.basicConfig(
     ]
 )
 
-logger = logging.getLogger("CountryAgent")
+logger = logging.getLogger("CountryIntelligence")
 
 def get_logger():
     return logger

@@ -9,14 +9,10 @@ BASE_URL = "https://restcountries.com/v3.1/name"
 @tool
 def search_country_data(country_name: str) -> str:
     """
-    Retrieves comprehensive information about a country from the REST Countries API.
-    Use this tool to find data such as population, capital, currencies, region, languages, and more.
-    
-    Args:
-        country_name: The name of the country to search for (e.g., 'Germany', 'Japan').
+    Search for official intelligence on a specific country.
     """
     if not country_name:
-        return "Please provide a valid country name."
+        return "Invalid country focus."
         
     country_clean = country_name.strip()
     max_retries = 3
@@ -24,25 +20,22 @@ def search_country_data(country_name: str) -> str:
     for attempt in range(max_retries):
         try:
             url = f"{BASE_URL}/{country_clean}"
-            logger.info(f"Tool Invoked: Searching for {country_clean} (Attempt {attempt + 1})")
+            logger.info(f"Accessing Intelligence API: {country_clean}")
             
             res = requests.get(url, timeout=10)
 
             if res.status_code == 200:
                 data = res.json()
                 if data and isinstance(data, list):
-                
                     return str(data[0])
                 
             if res.status_code == 404:
-                return f"No data found for country: '{country_clean}'. Please verify the spelling."
+                return f"Intelligence missing for: '{country_clean}'. Check spelling."
                 
-            logger.warning(f"API returned status {res.status_code} for {country_clean}")
-            
-        except Exception as e:
-            logger.error(f"Tool Error on attempt {attempt + 1}: {e}")
+        except Exception:
+            pass
             
         if attempt < max_retries - 1:
-            time.sleep(2 ** attempt)
+            time.sleep(1)
             
-    return "The country information service is temporarily unavailable. Please try again later."
+    return "Intelligence service timeout."
