@@ -31,7 +31,7 @@ def search_country_data(country_name: str) -> str:
             if res.status_code == 200:
                 data = res.json()
                 if data and isinstance(data, list):
-                    # We return the first match as a string for the LLM to process
+                
                     return str(data[0])
                 
             if res.status_code == 404:

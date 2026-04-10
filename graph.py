@@ -10,7 +10,7 @@ from utils.logger import get_logger
 load_dotenv(override=True)
 logger = get_logger()
 
-# State definition
+
 class GraphState(TypedDict):
     """
     Explicit state for our multi-node graph.
@@ -22,18 +22,18 @@ class GraphState(TypedDict):
     answer: Optional[str]
     error: Optional[str]
 
-# Structured output for Intent identification
+
 class IntentOutput(BaseModel):
     country: Optional[str] = Field(description="The standard name of the country identified in the query.")
     fields: List[str] = Field(description="The specific attributes requested (e.g., population, capital, currency).")
     is_country_query: bool = Field(description="Whether the query is actually about a country.")
 
-# Initialize LLM
+
 api_key = os.getenv("GEMINI_API_KEY")
 if api_key:
     os.environ["GOOGLE_API_KEY"] = api_key
 
-# We use Gemini 2.5 Flash for its excellent reasoning and structured output support
+
 llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0)
 
 def intent_node(state: GraphState):
@@ -78,7 +78,7 @@ def tool_node(state: GraphState):
 
     logger.info(f"Node: Tool Invocation for country: {state['country']}")
     
-    # We call our existing tool function (it handles retries and logging internally)
+  
     try:
         result = search_country_data.invoke({"country_name": state["country"]})
         return {"raw_data": str(result)}
@@ -92,7 +92,7 @@ def answer_node(state: GraphState):
     Synthesizes the final answer using the raw data and user query.
     """
     if state.get("error") == "off_topic":
-        return state # Answer was already set in intent_node
+        return state
     
     if state.get("error"):
          return {"answer": f"I encountered an issue while gathering data: {state['error']}"}
@@ -111,7 +111,7 @@ def answer_node(state: GraphState):
     
     response = llm.invoke(prompt)
     
-    # Handle multimodal content list format from Gemini 2.5 if necessary
+  
     raw_content = response.content
     if isinstance(raw_content, list):
         answer = "".join([part.get("text", "") for part in raw_content if isinstance(part, dict)])
@@ -120,7 +120,7 @@ def answer_node(state: GraphState):
         
     return {"answer": answer}
 
-# Build the Graph explicitly (Not a single ReAct loop)
+
 workflow = StateGraph(GraphState)
 
 workflow.add_node("intent", intent_node)
