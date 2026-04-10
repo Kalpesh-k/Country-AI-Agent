@@ -27,21 +27,21 @@ if api_key:
 
 llm = ChatGoogleGenerativeAI(model="gemini-flash-lite-latest", temperature=0)
 
-# Build the Graph explicitly (Modular Nodes)
+
 def build_graph():
     workflow = StateGraph(GraphState)
 
-    # Initialize nodes from the modular package
+    
     intent_node = get_intent_node(llm)
     tool_node = get_tool_node()
     answer_node = get_answer_node(llm)
 
-    # Add nodes to the graph
+   
     workflow.add_node("intent", intent_node)
     workflow.add_node("tool", tool_node)
     workflow.add_node("answer", answer_node)
 
-    # Define the edges (Strict 3-Node Sequential Flow)
+  
     workflow.add_edge(START, "intent")
     workflow.add_edge("intent", "tool")
     workflow.add_edge("tool", "answer")
