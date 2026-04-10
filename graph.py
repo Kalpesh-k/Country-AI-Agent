@@ -12,6 +12,7 @@ logger = get_logger()
 
 class GraphState(TypedDict):
     query: str
+    context: Optional[str]
     country: Optional[str]
     fields: List[str]
     raw_data: Optional[str]
@@ -34,8 +35,10 @@ def intent_node(state: GraphState):
     
     prompt = f"""Identify the country and data requirements from this query:
     Query: {state['query']}
+    Previous Context (Country): {state.get('context') or 'None'}
     
-    Note: If it isn't about country facts, mark is_country_query as False.
+    If the query is a follow-up (e.g., 'currency?', 'population?'), use the 'Previous Context' country.
+    If it isn't about country facts, mark is_country_query as False.
     Standardize all country names."""
     
     try:

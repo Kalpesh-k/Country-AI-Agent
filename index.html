@@ -326,6 +326,7 @@
         const input = document.getElementById('userInput');
         const loader = document.getElementById('loader');
         const btn = document.getElementById('sendBtn');
+        let lastCountry = null;
 
         function appendMessage(text, role) {
             const wrapper = document.createElement('div');
@@ -390,11 +391,16 @@
             btn.disabled = true;
 
             try {
-                const res = await fetch(`/ask?query=${encodeURIComponent(val)}`);
+                const url = `/ask?query=${encodeURIComponent(val)}&context=${encodeURIComponent(lastCountry || "")}`;
+                const res = await fetch(url);
                 const data = await res.json();
                 
                 loader.style.display = 'none';
                 btn.disabled = false;
+                
+                if (data.country) {
+                    lastCountry = data.country;
+                }
                 
                 if (data.response) {
                     const norm = data.response.endsWith('\n') ? data.response : data.response + '\n';

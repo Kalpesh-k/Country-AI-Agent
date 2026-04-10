@@ -13,13 +13,20 @@ def home():
     return FileResponse("index.html")
 
 @app.get("/ask")
-def ask(query: str = Query(...)):
-    logger.info(f"Query: {query}")
+def ask(query: str = Query(...), context: str = Query(None)):
+    logger.info(f"Query: {query} | Context: {context}")
     try:
-        result = graph.invoke({"query": query})
+        initial_state = {"query": query, "context": context}
+        result = graph.invoke(initial_state)
+        
         answer = result.get("answer", "No intelligence synthesized.")
+        country = result.get("country")
+        
         logger.info(f"Service completed analytical scan.")
-        return {"response": answer}
+        return {
+            "response": answer,
+            "country": country
+        }
     except Exception as e:
         logger.error(f"Service Error: {e}")
         return {"response": "The intelligence node encountered a temporary failure."}
