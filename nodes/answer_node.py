@@ -9,6 +9,8 @@ def get_answer_node(llm: ChatGoogleGenerativeAI):
             return state
         
         if state.get("error"):
+             if state["error"] == "capacity_reached":
+                 return {"answer": "The intelligence service is currently experiencing high demand. I am re-establishing the secure link—please try your request again in a few seconds."}
              return {"answer": f"The intelligence scan encountered an issue: {state['error']}"}
 
         if not state.get("raw_data") or "No data found" in state.get("raw_data", ""):
@@ -29,14 +31,21 @@ def get_answer_node(llm: ChatGoogleGenerativeAI):
         - Use a small Intelligence Card (### Header and - **Key**: Value) for multiple facts.
         - Maintain a professional tone."""
         
-        response = llm.invoke(prompt)
-        
-        raw_content = response.content
-        if isinstance(raw_content, list):
-            answer = "".join([part.get("text", "") for part in raw_content if isinstance(part, dict)])
-        else:
-            answer = raw_content
+        try:
+            response = llm.invoke(prompt)
             
-        return {"answer": answer}
+            raw_content = response.content
+            if isinstance(raw_content, list):
+                answer = "".join([part.get("text", "") for part in raw_content if isinstance(part, dict)])
+            else:
+                answer = raw_content
+                
+            return {"answer": answer}
+        except Exception as e:
+            error_str = str(e)
+            logger.error(f"Answer Error: {error_str}")
+            if "503" in error_str or "demand" in error_str or "deadline" in error_str:
+                return {"answer": "The intelligence service is currently experiencing high demand. I am re-establishing the secure link—please try your request again in a few seconds."}
+            return {"answer": "The intelligence scan encountered an unexpected issue."}
         
     return answer_node
