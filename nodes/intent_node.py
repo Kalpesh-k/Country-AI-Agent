@@ -28,7 +28,7 @@ def get_intent_node(llm: ChatGoogleGenerativeAI):
             
             if not extraction.is_country_query:
                 return {
-                    "answer": "This agent specializes in global country intelligence. Please provide a country name to start an analytical search.",
+                    "answer": "Agent: Scope restricted to regional data analysis. Please specify a country to retrieve relevant intelligence.",
                     "error": "off_topic"
                 }
             
