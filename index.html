@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,17 +15,20 @@
             --bg-color: #000000;
             --chat-bg: #050505;
             --surface: #0a0a0a;
-            --accent: #a855f7; /* Vibrant Purple */
+            --accent: #a855f7;
+            /* Vibrant Purple */
             --accent-glow: rgba(168, 85, 247, 0.25);
             --text-primary: #ffffff;
             --text-secondary: #8e8e93;
             --border: rgba(168, 85, 247, 0.15);
-            
+
             --radius-bubble: 20px;
             --radius-container: 24px;
         }
 
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Outfit', sans-serif;
@@ -74,7 +78,8 @@
             position: relative;
             display: flex;
             flex-direction: column;
-            min-height: 0; /* Crucial for flex scrolling */
+            min-height: 0;
+            /* Crucial for flex scrolling */
         }
 
         #chatFeed {
@@ -88,8 +93,14 @@
             scrollbar-color: var(--border) transparent;
         }
 
-        #chatFeed::-webkit-scrollbar { width: 4px; }
-        #chatFeed::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+        #chatFeed::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        #chatFeed::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
 
         /* Message Bubbles */
         .msg-wrapper {
@@ -99,8 +110,15 @@
         }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .msg-bot-container {
@@ -175,25 +193,32 @@
             padding: 10px 16px;
             display: flex;
             justify-content: space-between;
-            align-items: flex-start; /* Align to top for multi-line values */
+            align-items: flex-start;
+            /* Align to top for multi-line values */
             gap: 24px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         }
-        .intel-row:last-child { border-bottom: none; }
 
-        .label { 
-            color: var(--text-secondary); 
-            font-size: 0.8rem; 
-            font-weight: 500; 
-            white-space: nowrap; /* Keep label on one line */
+        .intel-row:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 500;
+            white-space: nowrap;
+            /* Keep label on one line */
             flex-shrink: 0;
         }
-        .val { 
-            color: var(--text-primary); 
-            font-weight: 500; 
-            font-size: 0.85rem; 
+
+        .val {
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.85rem;
             text-align: right;
-            word-break: break-word; /* Wrap long lists */
+            word-break: break-word;
+            /* Wrap long lists */
         }
 
         /* Loader */
@@ -217,9 +242,20 @@
         }
 
         @keyframes pulse-spin {
-            0% { transform: scale(1) rotate(0); opacity: 0.6; }
-            50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
-            100% { transform: scale(1) rotate(360deg); opacity: 0.6; }
+            0% {
+                transform: scale(1) rotate(0);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: scale(1.2) rotate(180deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1) rotate(360deg);
+                opacity: 0.6;
+            }
         }
 
         /* Footer Input */
@@ -257,7 +293,9 @@
             padding: 10px 0;
         }
 
-        .chat-input::placeholder { color: #555; }
+        .chat-input::placeholder {
+            color: #555;
+        }
 
         .send-btn {
             background: var(--accent);
@@ -273,12 +311,17 @@
             transition: transform 0.2s;
         }
 
-        .send-btn:hover { transform: scale(1.05); }
+        .send-btn:hover {
+            transform: scale(1.05);
+        }
 
         /* General Bold Fix */
-        b { color: var(--accent); }
+        b {
+            color: var(--accent);
+        }
     </style>
 </head>
+
 <body>
 
     <header>
@@ -304,7 +347,7 @@
         <div class="loader-row" id="loader">
             <div class="loader-pill">
                 <i class="bi bi-stars pulse-icon"></i>
-                <span>Retrieving factual data...</span>
+                <span>Agent: Analyzing Your Request...</span>
             </div>
         </div>
     </main>
@@ -312,7 +355,8 @@
     <footer>
         <form id="chatForm">
             <div class="input-box">
-                <input type="text" id="userInput" class="chat-input" placeholder="What would you like to know?" autocomplete="off" required>
+                <input type="text" id="userInput" class="chat-input" placeholder="What would you like to know?"
+                    autocomplete="off" required>
                 <button type="submit" class="send-btn" id="sendBtn">
                     <i class="bi bi-arrow-up-short" style="font-size: 1.5rem"></i>
                 </button>
@@ -336,7 +380,7 @@
                 wrapper.innerHTML = `<div class="msg-user">${text}</div>`;
             } else {
                 let html = text;
-                
+
                 // --- Simple Logic for Structured Info ---
                 const headerMatch = html.match(/### (.*?)\n/);
                 let header = "";
@@ -385,7 +429,7 @@
 
             appendMessage(val, 'user');
             input.value = '';
-            
+
             loader.style.display = 'block';
             feed.scrollTop = feed.scrollHeight;
             btn.disabled = true;
@@ -394,14 +438,14 @@
                 const url = `/ask?query=${encodeURIComponent(val)}&context=${encodeURIComponent(lastCountry || "")}`;
                 const res = await fetch(url);
                 const data = await res.json();
-                
+
                 loader.style.display = 'none';
                 btn.disabled = false;
-                
+
                 if (data.country) {
                     lastCountry = data.country;
                 }
-                
+
                 if (data.response) {
                     const norm = data.response.endsWith('\n') ? data.response : data.response + '\n';
                     appendMessage(norm, 'bot');
@@ -416,4 +460,5 @@
         });
     </script>
 </body>
+
 </html>
