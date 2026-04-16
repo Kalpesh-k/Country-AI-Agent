@@ -41,8 +41,8 @@ def get_intent_node(llm: ChatGoogleGenerativeAI):
             error_str = str(e)
             logger.error(f"Intent Error: {error_str}")
             
-            # Identify model capacity/overload issues
-            if "503" in error_str or "demand" in error_str or "deadline" in error_str:
+            # Identify model capacity/overload/quota issues
+            if any(x in error_str for x in ["503", "429", "demand", "deadline", "quota"]):
                 return {"error": "capacity_reached"}
             
             return {"error": error_str}

@@ -44,7 +44,7 @@ def get_answer_node(llm: ChatGoogleGenerativeAI):
         except Exception as e:
             error_str = str(e)
             logger.error(f"Answer Error: {error_str}")
-            if "503" in error_str or "demand" in error_str or "deadline" in error_str:
+            if any(x in error_str for x in ["503", "429", "demand", "deadline", "quota"]):
                 return {"answer": "The intelligence service is currently experiencing high demand. I am re-establishing the secure link—please try your request again in a few seconds."}
             return {"answer": "The intelligence scan encountered an unexpected issue."}
         
