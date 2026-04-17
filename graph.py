@@ -25,7 +25,7 @@ api_key = os.getenv("GEMINI_API_KEY")
 if api_key:
     os.environ["GOOGLE_API_KEY"] = api_key
 
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0, max_retries=3)
+llm = ChatGoogleGenerativeAI(model="gemini-3.1-flash-lite-preview", temperature=0, max_retries=3)
 
 
 def build_graph():
