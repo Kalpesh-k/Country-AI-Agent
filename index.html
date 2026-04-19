@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Country Intelligence Bot</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -50,6 +50,19 @@
             align-items: center;
             background: var(--bg-color);
             z-index: 10;
+            animation: headerFadeIn 0.5s ease-out;
+        }
+
+        @keyframes headerFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .header-title {
@@ -67,6 +80,21 @@
             background: #22c55e;
             border-radius: 50%;
             box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+            animation: statusPulse 2s infinite;
+        }
+
+        @keyframes statusPulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(1.2);
+            }
         }
 
         /* Chat Layout */
@@ -102,22 +130,61 @@
             border-radius: 10px;
         }
 
-        /* Message Bubbles */
+        /* Message Bubbles with Enhanced Animations */
         .msg-wrapper {
             display: flex;
             flex-direction: column;
-            animation: slideUp 0.3s ease-out forwards;
+            animation: slideUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
         }
 
         @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(20px);
             }
 
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+
+        /* Bot message glow animation */
+        .msg-wrapper.bot-glow .msg-bot {
+            animation: botGlowPulse 0.6s ease-out;
+        }
+
+        @keyframes botGlowPulse {
+            0% {
+                box-shadow: 0 0 0 0 var(--accent-glow);
+                border-color: var(--border);
+            }
+
+            50% {
+                box-shadow: 0 0 20px 8px var(--accent-glow);
+                border-color: var(--accent);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 var(--accent-glow);
+                border-color: var(--border);
+            }
+        }
+
+        /* User message slide animation */
+        .msg-wrapper.user-slide .msg-user {
+            animation: userSlideRight 0.4s ease-out;
+        }
+
+        @keyframes userSlideRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
             }
         }
 
@@ -138,6 +205,11 @@
             justify-content: center;
             flex-shrink: 0;
             box-shadow: 0 4px 12px var(--accent-glow);
+            transition: transform 0.2s ease;
+        }
+
+        .bot-avatar:hover {
+            transform: scale(1.1) rotate(5deg);
         }
 
         .msg-bot {
@@ -147,6 +219,12 @@
             border-radius: 4px 20px 20px 20px;
             line-height: 1.6;
             font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .msg-bot:hover {
+            border-color: var(--accent);
+            transform: translateX(3px);
         }
 
         .msg-user {
@@ -158,15 +236,34 @@
             max-width: 75%;
             font-size: 0.95rem;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
         }
 
-        /* Data Card Rendering */
+        .msg-user:hover {
+            transform: translateX(-3px);
+            box-shadow: 0 12px 28px rgba(168, 85, 247, 0.3);
+        }
+
+        /* Data Card Rendering with Staggered Animation */
         .intel-card {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border);
             border-radius: 16px;
             margin: 15px 0 5px;
             overflow: hidden;
+            animation: cardFadeIn 0.5s ease-out;
+        }
+
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .intel-head {
@@ -183,6 +280,22 @@
             gap: 8px;
         }
 
+        .intel-head i {
+            animation: iconSpin 0.4s ease-out;
+        }
+
+        @keyframes iconSpin {
+            from {
+                transform: rotate(-90deg);
+                opacity: 0;
+            }
+
+            to {
+                transform: rotate(0);
+                opacity: 1;
+            }
+        }
+
         .intel-body {
             display: grid;
             grid-template-columns: 1fr;
@@ -194,9 +307,41 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            /* Align to top for multi-line values */
             gap: 24px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            animation: rowFadeIn 0.3s ease-out backwards;
+        }
+
+        .intel-row:nth-child(1) {
+            animation-delay: 0.05s;
+        }
+
+        .intel-row:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .intel-row:nth-child(3) {
+            animation-delay: 0.15s;
+        }
+
+        .intel-row:nth-child(4) {
+            animation-delay: 0.2s;
+        }
+
+        .intel-row:nth-child(5) {
+            animation-delay: 0.25s;
+        }
+
+        @keyframes rowFadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .intel-row:last-child {
@@ -208,7 +353,6 @@
             font-size: 0.8rem;
             font-weight: 500;
             white-space: nowrap;
-            /* Keep label on one line */
             flex-shrink: 0;
         }
 
@@ -218,10 +362,9 @@
             font-size: 0.85rem;
             text-align: right;
             word-break: break-word;
-            /* Wrap long lists */
         }
 
-        /* Loader */
+        /* Loader with enhanced animation */
         .loader-row {
             display: none;
             padding: 0 60px;
@@ -234,6 +377,19 @@
             gap: 10px;
             color: var(--text-secondary);
             font-size: 0.8rem;
+            animation: loaderPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes loaderPulse {
+
+            0%,
+            100% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
         }
 
         .pulse-icon {
@@ -262,6 +418,19 @@
         footer {
             padding: 20px 20px 40px;
             background: var(--bg-color);
+            animation: footerFadeIn 0.5s ease-out;
+        }
+
+        @keyframes footerFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .input-box {
@@ -274,12 +443,13 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
         }
 
         .input-box:focus-within {
             border-color: var(--accent);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.15);
+            transform: scale(1.02);
         }
 
         .chat-input {
@@ -291,10 +461,16 @@
             font-size: 0.95rem;
             outline: none;
             padding: 10px 0;
+            transition: all 0.2s;
         }
 
         .chat-input::placeholder {
             color: #555;
+            transition: opacity 0.2s;
+        }
+
+        .chat-input:focus::placeholder {
+            opacity: 0.5;
         }
 
         .send-btn {
@@ -308,16 +484,78 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.2s ease;
         }
 
         .send-btn:hover {
-            transform: scale(1.05);
+            transform: scale(1.1);
+            box-shadow: 0 0 12px var(--accent-glow);
+        }
+
+        .send-btn:active {
+            transform: scale(0.95);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
 
         /* General Bold Fix */
         b {
             color: var(--accent);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+            #chatFeed {
+                padding: 20px 15px;
+                gap: 20px;
+            }
+
+            .msg-bot-container {
+                max-width: 92%;
+            }
+
+            .msg-user {
+                max-width: 85%;
+            }
+
+            .label {
+                white-space: normal;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .msg-bot-container {
+                max-width: 100%;
+            }
+
+            .msg-user {
+                max-width: 90%;
+            }
+
+            .intel-row {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .val {
+                text-align: left;
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 </head>
@@ -376,6 +614,13 @@
             const wrapper = document.createElement('div');
             wrapper.className = 'msg-wrapper';
 
+            // Add animation classes based on role
+            if (role === 'user') {
+                wrapper.classList.add('user-slide');
+            } else {
+                wrapper.classList.add('bot-glow');
+            }
+
             if (role === 'user') {
                 wrapper.innerHTML = `<div class="msg-user">${text}</div>`;
             } else {
@@ -419,7 +664,14 @@
             }
 
             feed.appendChild(wrapper);
-            feed.scrollTop = feed.scrollHeight;
+
+            // Smooth scroll with animation timing
+            setTimeout(() => {
+                feed.scrollTo({
+                    top: feed.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }, 50);
         }
 
         form.addEventListener('submit', async (e) => {
@@ -430,9 +682,21 @@
             appendMessage(val, 'user');
             input.value = '';
 
+            // Animate input clearing
+            input.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                input.style.transform = '';
+            }, 150);
+
             loader.style.display = 'block';
             feed.scrollTop = feed.scrollHeight;
             btn.disabled = true;
+
+            // Animate button on loading
+            btn.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                if (btn.style.transform) btn.style.transform = '';
+            }, 200);
 
             try {
                 const url = `/ask?query=${encodeURIComponent(val)}&context=${encodeURIComponent(lastCountry || "")}`;
@@ -457,6 +721,15 @@
                 btn.disabled = false;
                 appendMessage("The service is temporarily unavailable.", 'bot');
             }
+        });
+
+        // Add focus animation to input
+        input.addEventListener('focus', () => {
+            input.parentElement.style.transform = 'scale(1.02)';
+        });
+
+        input.addEventListener('blur', () => {
+            input.parentElement.style.transform = '';
         });
     </script>
 </body>

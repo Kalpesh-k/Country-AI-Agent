@@ -29,4 +29,4 @@ def ask(query: str = Query(...), context: str = Query(None)):
         }
     except Exception as e:
         logger.error(f"Service Error: {e}")
-        return {"response": "The intelligence node encountered a temporary failure."}
+        return {"response": "The Intelligence Bot encountered a temporary failure. Please try again later."}
